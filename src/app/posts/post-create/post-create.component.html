@@ -1,11 +1,13 @@
-<mat-card>
-  <form (submit)="addPost(postForm)" #postForm = "ngForm">
+<mat-spinner *ngIf = "isLoading"></mat-spinner>
+<mat-card *ngIf = "!isLoading">
+  <form (submit)="savePost(postForm)" #postForm = "ngForm">
     <mat-form-field>
-      <input matInput type="text" name="title" ngModel required #title="ngModel" placeholder="Post Title">
+      <input matInput type="text" name="title" [ngModel] = post?.title required #title="ngModel" placeholder="Post Title">
       <mat-error *ngIf="title.invalid">Please enter post title.</mat-error>
     </mat-form-field>
+    <!-- (post?.title) ?= elvis operator -->
     <mat-form-field>
-      <textarea matInput col="6" name="content" ngModel required #content="ngModel" placeholder="Post Content"></textarea>
+      <textarea matInput col="6" name="content" [ngModel] = post?.content required #content="ngModel" placeholder="Post Content"></textarea>
       <mat-error *ngIf="content.invalid">Please enter post content.</mat-error>
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit">Save Post</button>
