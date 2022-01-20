@@ -8,3 +8,16 @@ mat-card{
 mat-form-field,textarea{
     width:100%;
 }
+input[type=file]{
+    visibility: hidden;
+}
+.img-preview{
+    height:5rem;
+    margin:1rem 0;
+}
+.img-preview img{
+    height:100%;
+}
+.error-space{
+    padding-bottom: 1rem;
+}
