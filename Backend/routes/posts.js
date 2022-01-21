@@ -47,11 +47,23 @@ router.post("",multer({storage:storage}).single("image"),(req,res,next) => {
 });
 
 router.get("",(req,res,next) => {
-    Post.find().then((document) => {
+    const pageSize = +req.query.pageSize; //'+' sign added to convert string type to number
+    const currentPage = +req.query.currentPage;
+    const postFindQuery = Post.find();
+    let fetchedData;
+    if(pageSize && currentPage){
+        postFindQuery.skip(pageSize * (currentPage - 1)).
+        limit(pageSize);
+    }
+    postFindQuery.then((document) => {
+        fetchedData = document;
+        return Post.count();
+    }).then((count) => {
         //console.log(document);
         res.status(200).json({
             message:"Post successfully fetched",
-            posts:document
+            posts:fetchedData,
+            postsCount:count
         });
     });
 });
@@ -65,7 +77,7 @@ router.put("/:id",multer({storage:storage}).single('image'),(req,res) => {
         _id : req.body.id,
         title : req.body.title,
         content : req.body.content,
-        imagePath : imagePath
+        imagePath : req.body.imagePath
     });
     console.log(post);
     Post.updateOne({_id : req.params.id},post).then((result) => {

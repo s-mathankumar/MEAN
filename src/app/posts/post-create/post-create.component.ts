@@ -84,7 +84,7 @@ export class PostCreateComponent implements OnInit {
         this.form.value.content,
         this.form.value.image
         );
-      this.router.navigate(['/']);
+      // this.router.navigate(['/']);
     } else {
       this.postsService.updatePost(
         this.postId, 
@@ -92,7 +92,6 @@ export class PostCreateComponent implements OnInit {
         this.form.value.content,
         this.form.value.image
         );
-      this.router.navigate(['/']);
     }
     this.form.reset();
     //this.postCreated.emit(posts);
