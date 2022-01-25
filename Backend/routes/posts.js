@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Post = require("../Models/post");
+const verifyAuth = require('../middleware/verifyAuth'); //verying Authorization by json web token
 const multer = require('multer');
 
 const MIME_TYPE_MAP = {
@@ -26,7 +27,7 @@ const storage = multer.diskStorage({
     }
 });
 
-router.post("",multer({storage:storage}).single("image"),(req,res,next) => {
+router.post("",verifyAuth,multer({storage:storage}).single("image"),(req,res,next) => {
     const url = req.protocol + "://" +req.get('host');
     const post = new Post({
         title:req.body.title,
@@ -68,7 +69,7 @@ router.get("",(req,res,next) => {
     });
 });
 
-router.put("/:id",multer({storage:storage}).single('image'),(req,res) => {
+router.put("/:id",verifyAuth,multer({storage:storage}).single('image'),(req,res) => {
     if(req.file){
         const url = req.protocol+'://'+ req.get('host');
         imagePath = url + "/images/" + req.file.filename; 
@@ -88,7 +89,7 @@ router.put("/:id",multer({storage:storage}).single('image'),(req,res) => {
     });
 });
 
-router.delete("/:id",(req,res) => {
+router.delete("/:id",verifyAuth,(req,res) => {
     console.log(req.params.id);
     Post.deleteOne({_id : req.params.id}).then((result) => {
       console.log("result",result);

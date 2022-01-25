@@ -1,11 +1,12 @@
+mat-toolbar{
+    width:100%;
+}
 .link{
     padding-left: 10px;
 }
 .link a {
     text-decoration: none;
-}
-ul{
-    float:left;
+    font-size: 1rem;
 }
 .link-active{
     color: yellow;

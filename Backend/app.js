@@ -5,6 +5,7 @@ const { json } = require('body-parser');
 const mongoose = require('mongoose');
 const dbCredentials = require('./MongoCredentials.json');
 const postsRoutes = require('./routes/posts');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -27,11 +28,12 @@ app.use("/images",express.static(path.join("backend/images")));
 
 app.use((req,res,next) => {
     res.setHeader("Access-Control-Allow-Origin","*");
-    res.setHeader("Access-Control-Allow-Headers","Origin,Content-Type,x-Requested-With,Accept");
+    res.setHeader("Access-Control-Allow-Headers","Origin,Content-Type,x-Requested-With,Accept,Authorization");
     res.setHeader("Access-Control-Allow-Methods","GET,POST,DELETE,PUT,PATCH,OPTIONS");
     next();
 });
 
+app.use("/user",userRoutes);
 app.use("/posts",postsRoutes);
 
 module.exports = app;

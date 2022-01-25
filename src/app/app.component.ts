@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from './auth/auth.service';
 //import { Post } from './posts/post.model';
 
 @Component({
@@ -13,4 +14,9 @@ export class AppComponent {
   // onAddPosts(posts:any){
   //   this.storedPosts.push(posts);
   // }
-}
+  constructor(public authService : AuthService) {}
+  ngOnInit(){
+      this.authService.autoAuthenticateUser();
+    }
+  }
+

@@ -1,5 +1,8 @@
 <mat-toolbar color="primary">
         <span class="link"><a mat-button [routerLink]="['/']" routerLinkActive='mat-accent' [routerLinkActiveOptions]="{exact:true}">My Messages</a></span>
-        <span class="link"><a mat-button [routerLink]="['/create-post']" routerLinkActive='mat-accent'>Create
+        <span class="link" *ngIf="authenticatedUser"><a mat-button [routerLink]="['/create-post']" routerLinkActive='mat-accent'>Create
                     Post</a></span>
+        <span class="link" *ngIf="!authenticatedUser"><a mat-button [routerLink]="['/login']" routerLinkActive="mat-accent">Login</a></span>
+        <span class="link" *ngIf="!authenticatedUser"><a mat-button [routerLink]="['/signup']" routerLinkActive="mat-accent">Signup</a></span>
+        <button mat-button type="button" *ngIf="authenticatedUser" color="warn" (click)="onLogout()">Logout</button>
 </mat-toolbar>

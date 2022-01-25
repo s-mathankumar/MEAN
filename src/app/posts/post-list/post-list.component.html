@@ -9,7 +9,7 @@
         </div>
         <hr>
         <p>{{post.content}}</p>
-        <mat-action-row>
+        <mat-action-row *ngIf="authenticatedUser">
             <button mat-stroked-button color="primary" (click)="onEditPost(post.id)">EDIT</button>
             <button mat-stroked-button color="accent" (click)="onPostDelete(post.id)">DELETE</button>
         </mat-action-row>

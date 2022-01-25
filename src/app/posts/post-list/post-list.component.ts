@@ -4,6 +4,7 @@ import { PostsService } from '../posts.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-post-list',
@@ -22,8 +23,11 @@ export class PostListComponent implements OnInit {
   postsPerPage = 2;
   currentPage =1;
   postsPageOptions = [2,4,6,8,10];
+  authenticatedUser:boolean = false;
   private postsSubscription = new Subscription;
-  constructor(public postsService:PostsService,private router : Router) { }
+  private authSubscription = new Subscription;
+
+  constructor(public postsService:PostsService,private router : Router, public authService : AuthService) { }
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -34,7 +38,12 @@ export class PostListComponent implements OnInit {
       this.postsSize = postData.postsCount;
       this.posts = postData.posts;
     });
+    this.authenticatedUser=this.authService.getUserAuthenticatedStatus();
+    this.authService.getAuthLisner().subscribe(isAuthenticated => {
+      this.authenticatedUser = isAuthenticated;
+    })
   }
+
   onPageChange(page:PageEvent){
     this.currentPage = page.pageIndex + 1;
     this.postsPerPage = page.pageSize;
