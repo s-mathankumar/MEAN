@@ -24,6 +24,7 @@ export class PostListComponent implements OnInit {
   currentPage =1;
   postsPageOptions = [2,4,6,8,10];
   authenticatedUser:boolean = false;
+  userId:string | null | undefined;
   private postsSubscription = new Subscription;
   private authSubscription = new Subscription;
 
@@ -31,6 +32,7 @@ export class PostListComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
+    this.userId = this.authService.getUserDataId();
     this.postsService.getPosts(this.postsPerPage,this.currentPage);
     this.postsSubscription = this.postsService.getPostsUpdateListner().
     subscribe((postData:{posts:Post[],postsCount:number})=>{
@@ -41,6 +43,7 @@ export class PostListComponent implements OnInit {
     this.authenticatedUser=this.authService.getUserAuthenticatedStatus();
     this.authService.getAuthLisner().subscribe(isAuthenticated => {
       this.authenticatedUser = isAuthenticated;
+      this.userId= this.authService.getUserDataId();
     })
   }
 

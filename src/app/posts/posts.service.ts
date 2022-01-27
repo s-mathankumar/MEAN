@@ -22,11 +22,13 @@ export class PostsService {
           title:post.title,
           content:post.content,
           id:post._id,
-          imagePath:post.imagePath
+          imagePath:post.imagePath,
+          creator:post.creator
         }
       }),postsCount:postData.postsCount};
     })).
     subscribe(transformedPostData => {
+      console.log(transformedPostData);
       this.posts = transformedPostData.posts;
       this.postsUpdated.next({
         posts:[...this.posts],
@@ -86,7 +88,8 @@ export class PostsService {
         id:id,
         title:title,
         content:content,
-        imagePath:image
+        imagePath:image,
+        creator:null 
       }
     }
     this.http.put("http://localhost:3000/posts/"+id,postData).subscribe((response) => {

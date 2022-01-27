@@ -32,7 +32,8 @@ router.post("",verifyAuth,multer({storage:storage}).single("image"),(req,res,nex
     const post = new Post({
         title:req.body.title,
         content:req.body.content,
-        imagePath:url+ "/images/" +req.file.filename
+        imagePath:url+ "/images/" +req.file.filename,
+        creator:req.userData.id
     });
     post.save().then((result) => {
         res.status(201).json({
@@ -41,9 +42,14 @@ router.post("",verifyAuth,multer({storage:storage}).single("image"),(req,res,nex
                 title : result.title, //return all objects except which one added or overwritten
                 id:result._id,
                 content : result.content,
-                imagePath : result.imagePath
+                imagePath : result.imagePath,
+                creator : result.creator
             }
         });
+    }).catch((error) => {
+        res.status(500).json({
+            message : "Creating a post failed"
+        })
     }); //Name of the Model
 });
 
@@ -66,6 +72,10 @@ router.get("",(req,res,next) => {
             posts:fetchedData,
             postsCount:count
         });
+    }).catch(error => {
+        res.status(500).json({
+            message:"fetching posts failed..!"
+        })
     });
 });
 
@@ -78,36 +88,53 @@ router.put("/:id",verifyAuth,multer({storage:storage}).single('image'),(req,res)
         _id : req.body.id,
         title : req.body.title,
         content : req.body.content,
-        imagePath : req.body.imagePath
+        imagePath : req.body.imagePath,
     });
     console.log(post);
-    Post.updateOne({_id : req.params.id},post).then((result) => {
-        console.log("result",result,post);
-        res.status(200).json({message:'successfully post updated'});
+    Post.updateOne({_id : req.params.id,creator:req.userData.id},post).then((result) => {
+        if(result.modifiedCount > 0){
+            res.status(200).json({message:'successfully post updated'});
+        }else{
+            res.status(401).json({message:"UnAuthorized"});
+        }
     }).catch((error) => {
-        console.log("error",error);
+        res.status(500).json({
+            message:"Something went wrong on update...!"
+        })
     });
 });
 
 router.delete("/:id",verifyAuth,(req,res) => {
-    console.log(req.params.id);
-    Post.deleteOne({_id : req.params.id}).then((result) => {
-      console.log("result",result);
+    Post.deleteOne({_id : req.params.id,creator:req.userData.id}).then((result) => {
+        console.log(result);
+        if(result.deletedCount > 0){
+            res.status(200).json({
+                message:"Post deleted successfully"
+            });
+        }else{
+            res.status(401).json({
+                message:"unAuthorized"
+            });
+        }
     }).catch((error) =>{
-        console.log(error);
-    });
-    res.status(200).json({
-        message:"Post deleted successfully"
+        res.status(500).json({
+            message:"post can't deleted...!"
+        })
     });
 });
 
 router.get("/:id",(req,res) => {
-    Post.findById({_id : req.params.id}).then((post) => {
+    Post.findById({_id : req.params.id})
+    .then((post) => {
         if(post){
             res.status(200).json(post);
         }else{
             res.status(404).json({message:'post not found'});
         }
+    }).catch(error => {
+        res.status(500).json({
+            message:"Fetching post failed...!"
+        })
     });
 });
 

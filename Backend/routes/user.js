@@ -19,7 +19,7 @@ router.post("/signup",(req,res,next) => {
             });
         }).catch(error => {
             res.status(500).json({
-                error:error
+                message:"E-mail id already exists"
             });
         });
     });
@@ -47,12 +47,13 @@ router.post("/login",(req,res,next) => {
             const token = jwt.sign({email:fetchedUser.email,id:fetchedUser._id},"Secret_Text@123",{expiresIn:"1h"}); 
             res.status(200).json({
                 token:token,
-                expiresIn : 3600
+                expiresIn : 3600,
+                userId : fetchedUser._id
             })
         });
     }).catch(error => {
          res.status(401).json({
-            error : error
+            message : "Authorization failed"
         });
     });
 });

@@ -1,0 +1,10 @@
+::ng-deep .mat-dialog-container{
+    border-radius: 15px;
+    border-style: solid;
+    border-color: #3f51b5;
+    border-width: 1px 1px 1px 8px;
+}
+.header{
+    text-align: center;
+    color:red;
+}
